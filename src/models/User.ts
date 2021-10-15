@@ -8,7 +8,7 @@ export interface UserType {
 	hashedPassword?: string;
 	googleId?: string;
 	displayPicture?: string;
-	isAdmin?: boolean;
+	isVerified?: boolean;
 }
 
 const userSchema = new Schema<UserType>({
@@ -40,6 +40,15 @@ const userSchema = new Schema<UserType>({
 		type: String,
 		required: function (this: UserType) {
 			return this.authType === 'google';
+		},
+	},
+	isVerified: {
+		type: Boolean,
+		default: function (this: UserType) {
+			return this.authType !== 'local';
+		},
+		required: function (this: UserType) {
+			return this.authType === 'local';
 		},
 	},
 });

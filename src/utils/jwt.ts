@@ -5,7 +5,7 @@ export const generateJWT = function (user: UserType) {
 	const id = user.id;
 
 	const payload = {
-		sub: id,
+		id,
 		iat: Date.now(),
 	};
 
