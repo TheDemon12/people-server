@@ -1,9 +1,17 @@
 import { Router } from 'express';
 import isAuth from 'middlewares/auth/isAuth';
+
 import { User } from 'models/User';
 
 import { generateJWT } from 'utils/jwt';
 import { generatePassword, validatePassword } from 'utils/password';
+
+import sendMail from 'services/mailer';
+
+interface VerifyOTPMail {
+	otp: string;
+	name: string;
+}
 
 const router = Router();
 
@@ -24,6 +32,14 @@ router.post('/register', async (req, res) => {
 		hashedPassword,
 	});
 	await newUser.save();
+
+	const result = await sendMail<VerifyOTPMail>({
+		templateName: 'verify-otp',
+		templateVars: { otp: '5804', name },
+		subject: 'Verify your Email Address for People',
+		to: email,
+	});
+	console.log(result);
 
 	return res.send('User Registered!');
 });

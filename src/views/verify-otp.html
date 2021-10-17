@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<title>Verify Email Address</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<style>
+		body {
+			background-color: #fff;
+			color: #424242;
+			font-family: 'Cabin', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+			font-size: 16px;
+			line-height: 24px;
+			justify-content: center;
+		}
+		.innerBox {
+			width: 100%;
+			background-color: white;
+			max-width: 600px;
+			height: fit-content;
+			text-align: center;
+		}
+
+		.heading {
+			background-color: #5468ff;
+			color: #fff;
+			padding: 1rem 0;
+		}
+		.heading .logo {
+			width: 7rem;
+			margin: 1rem 0;
+		}
+
+		.heading h3 {
+			font-weight: 600;
+			font-size: 1rem;
+			margin-bottom: 0.8rem;
+			letter-spacing: 0.1rem;
+		}
+		.heading h1 {
+			font-size: 1.8rem;
+			margin-top: 0;
+		}
+
+		.content {
+			padding: 1rem 2rem;
+		}
+		.content .otp {
+			color: #5468ff;
+			font-size: 48px;
+			margin: 3rem;
+		}
+		.content .name {
+			font-weight: bold;
+			font-size: 1.2rem;
+		}
+		.footer {
+			color: #fff;
+			background-color: #5468ff;
+			padding: 0.4rem;
+			font-size: 0.9rem;
+		}
+	</style>
+	<body>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td align="center">
+					<div class="innerBox">
+						<div class="heading">
+							<img src="cid:logo" alt="" class="logo" />
+
+							<h3>THANKS FOR SIGNING UP!</h3>
+							<h1>Verify Your Email Address</h1>
+						</div>
+						<div class="content">
+							<p class="name">Hi <%= name %>,</p>
+							<p>
+								You're almost ready to get started. Please use the below 4-digit
+								code to verify your email address and enjoy our exclusive
+								platform
+							</p>
+							<h1 class="otp"><%= otp %></h1>
+							<p class="thanks">
+								Thanks, <br />
+								Team People
+							</p>
+						</div>
+						<div class="footer">
+							Copyright © 2021 People, All Rights Reserved
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

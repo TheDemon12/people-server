@@ -8,7 +8,7 @@ import { connect } from 'mongoose';
 import passport from 'passport';
 
 import auth from 'routes/auth';
-import 'utils/passport/local';
+import 'services/passport/local';
 
 const app = express();
 
