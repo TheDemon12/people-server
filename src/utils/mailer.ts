@@ -35,7 +35,12 @@ const sendMail = <T>({
 	if (templateName && fs.existsSync(templatePath)) {
 		const template = fs.readFileSync(templatePath, 'utf-8');
 		const html = ejs.render(template, templateVars);
-		const text = htmlToText(html);
+		const text = htmlToText(html, {
+			selectors: [
+				{ selector: 'h1', options: { uppercase: false } },
+				{ selector: 'h3', options: { uppercase: false } },
+			],
+		});
 		const htmlWithStylesInlined = juice(html);
 
 		return transporter.sendMail({

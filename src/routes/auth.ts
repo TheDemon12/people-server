@@ -6,7 +6,8 @@ import { User } from 'models/User';
 import { generateJWT } from 'utils/jwt';
 import { generatePassword, validatePassword } from 'utils/password';
 
-import sendMail from 'services/mailer';
+import sendMail from 'utils/mailer';
+import { OneTimePassword } from 'models/oneTimePassword';
 
 interface VerifyOTPMail {
 	otp: string;
@@ -31,15 +32,21 @@ router.post('/register', async (req, res) => {
 		authType: 'local',
 		hashedPassword,
 	});
-	await newUser.save();
+	const userInDB = await newUser.save();
 
-	const result = await sendMail<VerifyOTPMail>({
+	const otpValue = Math.floor(Math.random() * 10000).toString();
+	const newOtp = new OneTimePassword({
+		userId: userInDB.id,
+		otpValue,
+	});
+	await newOtp.save();
+
+	sendMail<VerifyOTPMail>({
 		templateName: 'verify-otp',
-		templateVars: { otp: '5804', name },
+		templateVars: { otp: otpValue, name },
 		subject: 'Verify your Email Address for People',
 		to: email,
 	});
-	console.log(result);
 
 	return res.send('User Registered!');
 });
@@ -52,6 +59,30 @@ router.post('/login', async (req, res) => {
 
 	const isValid = await validatePassword(password, user.hashedPassword!);
 	if (!isValid) return res.status(401).send('Invalid Email or Password!');
+
+	if (!user.isVerified) {
+		const otpValue = Math.floor(Math.random() * 10000).toString();
+
+		const otpInDB = await OneTimePassword.findOne({ userId: user.id });
+
+		if (otpInDB && otpInDB?.expiresAt! < new Date()) {
+			otpInDB.set({
+				otpValue: otpValue,
+				expiresAt: Date.now() + 10 * 1000 * 60,
+			});
+
+			await otpInDB.save();
+
+			sendMail<VerifyOTPMail>({
+				templateName: 'verify-otp',
+				templateVars: { otp: otpValue, name: user.name },
+				subject: 'Verify your Email Address for People',
+				to: email,
+			});
+		}
+
+		return res.status(403).send('User Not Verified!');
+	}
 
 	const tokenObject = generateJWT(user);
 
